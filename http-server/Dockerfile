@@ -1,12 +1,15 @@
-# VERSION               0.0.2
 # DOCKER-VERSION        0.4.0
 #
-from    base:ubuntu-12.10
-maintainer  Thomas Frössman <thomasf@josysstem.se>
-add sources.list /etc/apt/sources.list
-run DEBIAN_FRONTEND=noninteractive apt-get update
-run DEBIAN_FRONTEND=noninteractive apt-get install -y -q nginx-light && apt-get clean
-add nginx-wrapper /usr/sbin/nginx-wrapper
-add bandersnatch.nginx /etc/nginx/sites-enabled/default
-expose 80
-cmd ["/usr/sbin/nginx-wrapper"]
+FROM   base:ubuntu-12.10
+MAINTAINER  Thomas Frössman <thomasf@josysstem.se>
+ADD sources.list /etc/apt/sources.list
+RUN DEBIAN_FRONTEND=noninteractive apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes -q inotify-tools nginx-light && apt-get clean
+ADD nginx-wrapper.sh /usr/sbin/nginx-wrapper
+RUN chmod 775 /usr/sbin/nginx-wrapper
+ADD pypi.nginx /etc/nginx/sites-available/default
+RUN mkdir -p /srv/pypi && chmod a+rX /srv/pypi
+# EXPOSE 80
+# CMD ["/usr/sbin/nginx-wrapper"]
+
+# end
