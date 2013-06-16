@@ -5,6 +5,8 @@ from    base:ubuntu-12.10
 maintainer  Thomas Frössman <thomasf@josysstem.se>
 add sources.list /etc/apt/sources.list
 run DEBIAN_FRONTEND=noninteractive apt-get update
-# run DEBIAN_FRONTEND=noninteractive apt-get install -y -q && apt-get clean
-expose  80 443
-# cmd ["/usr/local/bin/app", "run"]
+run DEBIAN_FRONTEND=noninteractive apt-get install -y -q nginx-light && apt-get clean
+add nginx-wrapper /usr/sbin/nginx-wrapper
+add bandersnatch.nginx /etc/nginx/sites-enabled/default
+expose 80
+cmd ["/usr/sbin/nginx-wrapper"]
